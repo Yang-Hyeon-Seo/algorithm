@@ -1,3 +1,6 @@
+# 입력받기
+import sys
+
 '''
 사다리 타고 내려가면서 (올라가지 x)
 아래 말고 다른 방향으로 이동할 수 있는 경우 거기로 이동
@@ -17,38 +20,49 @@ delta로 이동할 때 ri가 0보다 작아지는 순간이 오면 종료
 언제 끝날지 모르니까 while True 사용하기
 '''
 
-# 입력받기
-import sys
 sys.stdin = open('input.txt')
+
 T = int(input())
 for test_case in range(1, T + 1):
-    N = 100 # 100x100이니까
-    arr = [list(map(int, input().split())) for _ in range(N)] # 100x100 사이즈이기 때문에
+    N = 100  # 100x100이니까
+    arr = [list(map(int, input().split())) for _ in range(N)]  # 100x100 사이즈이기 때문에
 
     # 이동
-    rd = [0, -1, 0]  # 왼쪽, 위, 오른쪽
-    cd = [-1, 0, 1]
+    rd = [0, 0, -1]  # 왼쪽, 오른쪽, 위
+    cd = [-1, 1, 0]
+    code = 2    # 이전 진행 상태 기록 / 위로 이동하는 것이 기본 (0으로 할지 고민하다가 delta랑 맞추기로 함)
+    # code : 0 -> 왼쪽으로 이동함
+    # code : 1 -> 오른쪽으로 이동함
+    # code : 2 -> 위로 이동함
 
     # 2인 지점 찾기
-    for c in range(N): # 제일 마지막 행에서 찾으면 됨
+    for c in range(N):  # 제일 마지막 행에서 찾으면 됨
         if arr[-1][c] == 2:
-            start = c # 탐색을 시작할 위치
+            start = c  # 탐색을 시작할 위치
 
     # 현재 위치
-    r = 99 # 제일 마지막 행 인덱스가 99(100x100이니까)
+    r = 99  # 제일 마지막 행 인덱스가 99(100x100이니까)
     c = start
 
     # 반복하면서 이동
-    while True:
+    while r > 0:  # r이 0보다 작아지면 종료
         for i in range(3):
             ri = r + rd[i]
             ci = c + cd[i]
+            # 벽 확인 / 좌우 먼저 이동할거니까
+            if 0 <= ci < N:
+                # 이동할 수 있는 칸 나오면 바로 이동(위는 마지막에 확인하니까 괜춘
+                if arr[ri][ci] == 1:
+                    # 이동 방향 고려
+                    # if code == 0:  # 이전에 왼쪽으로 이동했음(오른쪽으로 이동x)
+                    #     if i == 1:
+                    #         continue
+                    # elif code == 1:  # 이전에 오른쪽으로 이동했음
+                    #     if i == 0:
+                    #         continue
 
-            # 벽 확인
-            if ri - 1 < 0:
-                x = c
-                break
-            elif 0 <= ci < N:
-                # 이동할 수 있는 칸이면 이동
-                if #좌우 먼저 확인
-                # 아니면 위로 이동
+                    r, c = ri, ci
+                    # if i == 2:
+                    #     code = 2
+                    break
+    print(f'#{test_case} {c}')
